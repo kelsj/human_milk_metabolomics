@@ -1,0 +1,30 @@
+
+Attaching package: ‘tidyr’
+
+The following objects are masked from ‘package:Matrix’:
+
+    expand, pack, unpack
+
+
+Attaching package: ‘Hmisc’
+
+The following objects are masked from ‘package:dplyr’:
+
+    src, summarize
+
+The following objects are masked from ‘package:base’:
+
+    format.pval, units
+
+Running metabolite: GALACTOSE (index 208)
+  replicate 1/10
+  replicate 2/10
+  replicate 3/10
+  replicate 4/10
+  replicate 5/10
+  replicate 6/10
+  replicate 7/10
+  replicate 8/10
+  replicate 9/10
+  replicate 10/10
+GALACTOSE no model

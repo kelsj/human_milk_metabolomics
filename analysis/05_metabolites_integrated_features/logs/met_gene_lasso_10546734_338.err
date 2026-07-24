@@ -1,0 +1,33 @@
+
+Attaching package: ‘tidyr’
+
+The following objects are masked from ‘package:Matrix’:
+
+    expand, pack, unpack
+
+
+Attaching package: ‘Hmisc’
+
+The following objects are masked from ‘package:dplyr’:
+
+    src, summarize
+
+The following objects are masked from ‘package:base’:
+
+    format.pval, units
+
+Running metabolite: NICOTINATE (index 338)
+  replicate 1/10
+  replicate 2/10
+  replicate 3/10
+  replicate 4/10
+  replicate 5/10
+  replicate 6/10
+  replicate 7/10
+  replicate 8/10
+  replicate 9/10
+  replicate 10/10
+Warning message:
+In lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) :
+ extra argument ‘family’ will be disregarded 
+Saved: /project2/kelseyj3_1714/kelseyj3/milk_metabolomics/human_milk_metabolomics/analysis/05_metabolites_integrated_features/output/by_metabolite/0338_NICOTINATE.rds

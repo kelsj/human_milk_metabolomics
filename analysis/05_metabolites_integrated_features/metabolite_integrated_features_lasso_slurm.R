@@ -50,9 +50,13 @@ dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 # -----------------------------------------------------------------------------
 # Prepare data
 # -----------------------------------------------------------------------------
+
 met.resid <- readRDS("data/lasso_input_combined_metabolites_genoPCresid.rds")
 met.resid.mat <- as.matrix(met.resid %>% select(-randID))
 rownames(met.resid.mat) <- met.resid$randID
+
+m <- colnames(met.resid.mat)[met_idx]
+message("Running metabolite: ", m, " (index ", met_idx, ")")
 
 # combined DHQ & maternal features
 dhq.pt.mat <- readRDS("data/lasso_input_combined_dhq_metadat.rds")
@@ -84,9 +88,6 @@ samp.size = nrow(met.resid.mat)
 if (met_idx > ncol(met.resid.mat)) {
   stop(sprintf("met_idx=%d exceeds number of metabolites=%d", met_idx, ncol(met.resid.mat)))
 }
-
-m <- colnames(met.resid.mat)[met_idx]
-message("Running metabolite: ", m, " (index ", met_idx, ")")
 
 y <- met.resid.mat[, m]
 
