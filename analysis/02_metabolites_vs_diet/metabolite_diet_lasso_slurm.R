@@ -21,7 +21,7 @@ source("utils/milk_metabolomics_env.R")
 args <- commandArgs(trailingOnly = TRUE)
 
 met_idx <- NA_integer_
-outdir <- "analysis/02_metabolites_vs_gene_expr/output/by_metabolite"
+outdir <- "analysis/02_metabolites_vs_diet/output/by_metabolite"
 nreps <- 10L
 
 if (length(args) >= 1 && nzchar(args[1])) {
