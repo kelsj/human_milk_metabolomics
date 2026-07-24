@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cd /project2/kelseyj3_1714/kelseyj3/milk_metabolomics/human_milk_metabolomics
+PROJECT_DIR="/project2/kelseyj3_1714/kelseyj3/milk_metabolomics/human_milk_metabolomics"
+cd "${PROJECT_DIR}"
 
-PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-R_SCRIPT="${PROJECT_DIR}/metabolite_gene_expr_lasso_slurm.R"
+R_SCRIPT="${PROJECT_DIR}/analysis/03_metabolites_vs_gene_expr/metabolite_gene_expr_lasso_slurm.R"
 OUTDIR="${PROJECT_DIR}/analysis/03_metabolites_vs_gene_expr/output/by_metabolite"
 LOGDIR="${PROJECT_DIR}/analysis/03_metabolites_vs_gene_expr/logs"
 
@@ -18,7 +18,8 @@ sbatch \
   --cpus-per-task=1 \
   --mem=8G \
   --time=08:00:00 \
+  --chdir="${PROJECT_DIR}" \
   --output="${LOGDIR}/met_gene_lasso_%A_%a.out" \
   --error="${LOGDIR}/met_gene_lasso_%A_%a.err" \
   --export=ALL \
-  --wrap="Rscript '${R_SCRIPT}' '${SLURM_ARRAY_TASK_ID}' '${OUTDIR}' 10"
+  --wrap="Rscript '${R_SCRIPT}' \"\$SLURM_ARRAY_TASK_ID\" '${OUTDIR}' 10"

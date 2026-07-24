@@ -1,0 +1,31 @@
+
+Attaching package: ‘tidyr’
+
+The following objects are masked from ‘package:Matrix’:
+
+    expand, pack, unpack
+
+
+Attaching package: ‘Hmisc’
+
+The following objects are masked from ‘package:dplyr’:
+
+    src, summarize
+
+The following objects are masked from ‘package:base’:
+
+    format.pval, units
+
+Running metabolite: CITRIC ACID (index 143)
+  replicate 1/10
+  replicate 2/10
+  replicate 3/10
+  replicate 4/10
+  replicate 5/10
+  replicate 6/10
+  replicate 7/10
+  replicate 8/10
+  replicate 9/10
+  replicate 10/10
+There were 11 warnings (use warnings() to see them)
+Saved: /project2/kelseyj3_1714/kelseyj3/milk_metabolomics/human_milk_metabolomics/analysis/03_metabolites_vs_gene_expr/output/by_metabolite/0143_CITRIC_ACID.rds
