@@ -1,0 +1,47 @@
+
+Attaching package: ‘tidyr’
+
+The following objects are masked from ‘package:Matrix’:
+
+    expand, pack, unpack
+
+
+Attaching package: ‘Hmisc’
+
+The following objects are masked from ‘package:dplyr’:
+
+    src, summarize
+
+The following objects are masked from ‘package:base’:
+
+    format.pval, units
+
+Running metabolite: RHAMNOSE (index 392)
+  replicate 1/10
+  replicate 2/10
+  replicate 3/10
+  replicate 4/10
+  replicate 5/10
+  replicate 6/10
+  replicate 7/10
+  replicate 8/10
+  replicate 9/10
+  replicate 10/10
+Warning messages:
+1: In lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) :
+ extra argument ‘family’ will be disregarded 
+2: In lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) :
+ extra argument ‘family’ will be disregarded 
+3: In lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) :
+ extra argument ‘family’ will be disregarded 
+4: In lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) :
+ extra argument ‘family’ will be disregarded 
+5: In lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) :
+ extra argument ‘family’ will be disregarded 
+6: In lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) :
+ extra argument ‘family’ will be disregarded 
+7: In lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) :
+ extra argument ‘family’ will be disregarded 
+8: In lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) :
+ extra argument ‘family’ will be disregarded 
+Saved: /project2/kelseyj3_1714/kelseyj3/milk_metabolomics/human_milk_metabolomics/analysis/02_metabolites_vs_diet/output/by_metabolite/0392_RHAMNOSE.rds
