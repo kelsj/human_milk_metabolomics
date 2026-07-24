@@ -3,18 +3,20 @@
 
 source("utils/milk_metabolomics_env.R")
 
-## 3A: histogram of variance exlained by genes expression selected by lasso reg
+## 3A: histogram of variance exlained by gene expression selected by lasso reg
 
-# load var expl per metabolite output
-# met.fit = readRDS("~/Documents/postdoc/milk_genomics/milk_metabolome_paper_2024/metab_vs_geneExpr/metabolite_vs_geneExpr_lasso/stabSel_v2/metabolite_geneExpr_stabSelFeat_linRegModelFit.rds")
-met.fit = readRDS("analysis/03_metabolites_vs_gene_expr/output/metabolite_geneExpr_stabSelFeat_linRegModelFit.rds")
+# use out-of-fold prediction r2
+met.fit.oof = readRDS("analysis/03_metabolites_vs_gene_expr/output/metabolite_geneExpr_oof_rsq.rds")
+oof.summary = met.fit.oof %>% group_by(metabolite) %>% 
+  slice_max(oof_rsq, n=1, with_ties=F) %>% ungroup() %>% arrange(-oof_rsq)
 
-met.fit$metabolite = factor(met.fit$metabolite, levels = met.fit %>% arrange(-rsq) %>% 
-                              pull(metabolite))
-median.rsq = met.fit %>% pull(rsq) %>% median()
+median(oof.summary$n_features) # 20
 
-ggplot(met.fit %>% filter(q<=0.05)) +
-  geom_bar(aes(x=metabolite,y=rsq,fill=n_features),stat="identity",width=1) + 
+oof.summary$metabolite = factor(oof.summary$metabolite, levels = oof.summary$metabolite)
+median.rsq = oof.summary %>% pull(oof_rsq) %>% median()
+
+ggplot(oof.summary) +
+  geom_bar(aes(x=metabolite,y=oof_rsq,fill=n_features),stat="identity",width=1) + 
   geom_hline(yintercept=median.rsq, linetype="dotted")+ 
   scale_y_continuous(expand = c(0,0)) +
   theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(),
