@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PROJECT_DIR="/project2/kelseyj3_1714/kelseyj3/milk_metabolomics/human_milk_metabolomics"
+cd /project2/kelseyj3_1714/kelseyj3/milk_metabolomics/human_milk_metabolomics
+
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 R_SCRIPT="${PROJECT_DIR}/metabolite_gene_expr_lasso_slurm.R"
 OUTDIR="${PROJECT_DIR}/analysis/03_metabolites_vs_gene_expr/output/by_metabolite"
 LOGDIR="${PROJECT_DIR}/analysis/03_metabolites_vs_gene_expr/logs"
