@@ -26,7 +26,7 @@ f2a = ggplot(oof.summary) +
   ylab("Variance explained") + labs(fill="# features") +
   scale_fill_gradient(low="#BDE8F5",high="#005461")
 
-ggsave(f2a, filename = "figures/Fig2A.png",width=7,height=2)
+ggsave(f2a, filename = "figures/Fig2A.png",width=8,height=2, dpi=600)
 
 
 ## 2B-2D: examples of metabolites well explained by diet
@@ -63,6 +63,9 @@ for (p in names(plot.mets)){
     ylab("Diet feature") +
     scale_fill_manual(values=c("#161E54","#DA498D")) +
     theme(legend.position="none")
+  ggsave(p2aa + theme(axis.text.y=element_blank(), 
+                      axis.title.x=element_blank(), axis.title.y=element_blank()),
+         file = paste0("figures/Fig2",p,"_a_nolab.png"), width=1.75, height=2, dpi=600)
   
   # second plot: scatter of metabolite vs. top diet feature
   myfeat = met.feat %>% arrange(-feat_r2) %>% head(1) %>% pull(feature) %>% as.character()
@@ -71,6 +74,8 @@ for (p in names(plot.mets)){
     geom_smooth(method="lm",se=T,color="black",alpha=0.2,linetype="dotted",linewidth=0.5) +
     geom_point(color="#3B9AB2",size=0.75) +
     xlab(myfeat) + ylab(mymet)
+  ggsave(p2ab + theme(axis.title.x=element_blank(), axis.title.y=element_blank()),
+         file = paste0("figures/Fig2",p,"_b_nolab.png"), width=2, height=2, dpi=600)
   
   # third plot: top foods contributing to this feature
   feat.dhq.name = grep(myfeat,colnames(dhq3.db),ignore.case=T,value=T)
@@ -86,7 +91,10 @@ for (p in names(plot.mets)){
   p2ac = ggplot(feat.foods %>% head(n=10)) +
     geom_bar(aes(y=Name, x=feat), stat="identity", fill="#B0C5A4") +
     xlab(myfeat) + ylab("Food")
-
+  ggsave(p2ac + theme(axis.text.y=element_blank(), 
+                      axis.title.x=element_blank(), axis.title.y=element_blank()),
+         file = paste0("figures/Fig2",p,"_c_nolab.png"), width=1.75, height=2, dpi=600)
+  
   # put all 3 together
   plot_grid(plotlist=list(p2aa,p2ab,p2ac), nrow=1, rel_widths=c(4,2,3), align="h")
   ggsave(paste0("figures/Fig2",p,".png"), width=9, height=2)
@@ -102,7 +110,7 @@ ggplot(hei.metab.corrs) +
   scale_fill_gradient2(low="#060771",mid="#f7f7f7",high="#E67E22",midpoint = 0) +
   theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(),
         panel.grid=element_blank())
-ggsave("figures/Fig2E.png",width=7,height=2)
+ggsave("figures/Fig2E.png",width=7,height=2, dpi=600)
 
 
 

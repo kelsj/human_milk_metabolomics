@@ -10,6 +10,8 @@ met.fit.oof = readRDS("analysis/03_metabolites_vs_gene_expr/output/metabolite_ge
 oof.summary = met.fit.oof %>% group_by(metabolite) %>% 
   slice_max(oof_rsq, n=1, with_ties=F) %>% ungroup() %>% arrange(-oof_rsq)
 
+met.fit = readRDS("analysis/03_metabolites_vs_gene_expr/output/metabolite_geneExpr_stabSelFeat_linRegModelFit.rds")
+
 median(oof.summary$n_features) # 20
 
 oof.summary$metabolite = factor(oof.summary$metabolite, levels = oof.summary$metabolite)
@@ -24,7 +26,7 @@ ggplot(oof.summary) +
   xlab("Metabolite") + 
   ylab("Variance explained") + labs(fill="# features") +
   scale_fill_gradient(low="#BDE8F5",high="#4477AA")
-ggsave("figures/Fig3A.png",width=7,height=2)
+ggsave("figures/Fig3A.png",width=6,height=2,dpi=600)
 
 
 ## 3B-C: load gene expression & metabolite data
@@ -34,7 +36,7 @@ tpm.1mo.resid = readRDS("data/gene_expression_lasso_inputDat.rds")
 met.resid = readRDS("data/milk_metabolomics_covarResiduals.rds")
 met.resid.matrix = as.matrix(met.resid %>% select(-randID))
 rownames(met.resid.matrix) = met.resid$randID
-met.resid.mat = met.resid.mat[colnames(tpm.1mo.resid),]
+met.resid.mat = met.resid.matrix[colnames(tpm.1mo.resid),]
 
 tpm.1mo.resid = t(tpm.1mo.resid)
 
@@ -44,7 +46,7 @@ ggplot(plot.dat, aes(x=V1, y=V2)) +
   geom_smooth(method="lm",se=T,color="black",alpha=0.2,linetype="dotted",linewidth=0.5) +
   geom_point(color="#4477AA",size=1) +
   xlab("QPRT expression") + ylab("Quinolinate")
-ggsave("figures/Fig3B.png",width=3,height=3)
+ggsave("figures/Fig3B.png",width=2.5,height=2.5,dpi=600)
 
 ## 3C: LALBA (ENSG00000167531) expression vs palmitoleic acid in milk
 plot.dat = as_tibble(cbind(tpm.1mo.resid[,"ENSG00000167531"],met.resid.mat[,"PALMITOLINOLEATE"]))
@@ -52,9 +54,9 @@ ggplot(plot.dat, aes(x=V1, y=V2)) +
   geom_smooth(method="lm",se=T,color="black",alpha=0.2,linetype="dotted",linewidth=0.5) +
   geom_point(color="#4477AA",size=1) +
   xlab("LALBA expression") + ylab("Palmitoleic acid")
-ggsave("figures/Fig3C.png",width=3,height=3)
+ggsave("figures/Fig3C.png",width=2.5,height=2.5,dpi=600)
 
-## 3D: DPEP1 (ENSG00000015413) eQTL -> cysteine-glycine
+
 
 
 

@@ -61,8 +61,10 @@ f5b = ggplot(all3plot) +
   ylab("Variance explained") + labs(fill="Feature type") +
   scale_fill_manual(values=mypal) + coord_flip()
 
-plot_grid(plotlist=list(f5a + theme(legend.position="none"), f5b), nrow=1, rel_widths = c(2,1))
-ggsave(file="figures/Fig5AB.png",width=10,height=2)
+plot_grid(plotlist=list(f5a + theme(legend.position="none"), f5b), nrow=1, rel_widths = c(2,1.5))
+ggsave(file="figures/Fig5AB.png",width=10,height=2.5)
+
+
 
 ## Fig 5C: 2-nonenoylcarnitine vs. its top features of each type
 
@@ -112,4 +114,4 @@ f5cd = ggplot(feat.foods %>% head(n=10)) +
   scale_x_continuous(expand=c(0,0))
 
 f5c_all = plot_grid(plotlist = list(f5ca,f5cb,f5cc,f5cd), nrow=1, rel_widths = c(1,1,1,1.5))
-ggsave(f5c_all,file="figures/fig5C.png",width=10,height=2)
+ggsave(f5c_all,file="figures/fig5C.png",width=10,height=2.5)
