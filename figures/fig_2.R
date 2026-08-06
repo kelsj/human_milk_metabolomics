@@ -62,7 +62,7 @@ for (p in names(plot.mets)){
     xlab("Partial R-squared") + 
     ylab("Diet feature") +
     scale_fill_manual(values=c("#161E54","#DA498D")) +
-    theme(legend.position="none")
+    theme(legend.position="none", panel.grid=element_blank())
   ggsave(p2aa + theme(axis.text.y=element_blank(), 
                       axis.title.x=element_blank(), axis.title.y=element_blank()),
          file = paste0("figures/Fig2",p,"_a_nolab.png"), width=1.75, height=2, dpi=600)
@@ -73,7 +73,8 @@ for (p in names(plot.mets)){
   p2ab = ggplot(plot.dat, aes(x=V1, y=V2)) +
     geom_smooth(method="lm",se=T,color="black",alpha=0.2,linetype="dotted",linewidth=0.5) +
     geom_point(color="#3B9AB2",size=0.75) +
-    xlab(myfeat) + ylab(mymet)
+    xlab(myfeat) + ylab(mymet) + 
+    theme(panel.grid=element_blank())
   ggsave(p2ab + theme(axis.title.x=element_blank(), axis.title.y=element_blank()),
          file = paste0("figures/Fig2",p,"_b_nolab.png"), width=2, height=2, dpi=600)
   
@@ -90,7 +91,8 @@ for (p in names(plot.mets)){
   feat.foods$Name = factor(feat.foods$Name, levels = rev(feat.foods$Name))
   p2ac = ggplot(feat.foods %>% head(n=10)) +
     geom_bar(aes(y=Name, x=feat), stat="identity", fill="#B0C5A4") +
-    xlab(myfeat) + ylab("Food")
+    xlab(myfeat) + ylab("Food") +
+    theme(panel.grid=element_blank())
   ggsave(p2ac + theme(axis.text.y=element_blank(), 
                       axis.title.x=element_blank(), axis.title.y=element_blank()),
          file = paste0("figures/Fig2",p,"_c_nolab.png"), width=1.75, height=2, dpi=600)

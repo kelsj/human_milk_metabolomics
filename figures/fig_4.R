@@ -32,7 +32,7 @@ ggplot(met.res) +
   geom_point(aes(x=bp_cum, y=-log10(p_wald), color=factor(chr)), size=0.5) +
   scale_color_manual(values = rep(c("#276FBF", "#183059"), unique(length(axis_set$chr)))) +
   scale_x_continuous(label = axis_set$chr, breaks = axis_set$center) +
-  theme(legend.position="None",panel.grid.major.x = element_blank(),panel.grid.minor.x = element_blank(),
+  theme(legend.position="None",panel.grid = element_blank(),
         axis.text.x=element_text(size=rel(0.75))) + 
   xlab("Chromosome") +
   ylab("-log10(P-value)")
@@ -52,7 +52,8 @@ ggplot(milk_v_plasma_qtl) + # %>% filter(power>0.95, p_wald>0.05)) +
   scale_color_gradient(low="darkblue",high="magenta") +
   xlab("Plasma effect estimate (95% CI)") +
   ylab("Milk effect estimate (95% CI)") +
-  labs(color="Replication\npower")
+  labs(color="Replication\npower") +
+  theme(panel.grid=element_blank())
 
 ggsave("figures/fig4C.png",width=5,height=4,dpi=600)
 
@@ -70,7 +71,8 @@ ggplot() +
   xlab("PGS plasma R-squared") +
   ylab("PGS milk R-squared") + 
   labs(fill="Replication\npower") + 
-  scale_x_log10() + scale_y_log10()
+  scale_x_log10() + scale_y_log10() +
+  theme(panel.grid=element_blank())
 ggsave("figures/fig4D.png",width=5,height=4,dpi=600)
 
 

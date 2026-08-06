@@ -24,8 +24,8 @@ f1c = ggplot(met.summary) +
   scale_fill_manual(values=color.code$colorcode) +
   xlab("Metabolite mean abundance") +
   ylab("Metabolite coef. of var.") + labs(fill="") +
-  theme(legend.position="none")
-ggsave(f1c, filename="figures/Fig1C.png",width=5,height=5)
+  theme(legend.position="none", panel.grid=element_blank())
+ggsave(f1c, filename="figures/Fig1C.png",width=4,height=4,dpi=600)
 
 
 
@@ -59,8 +59,9 @@ f1d = ggplot(module.cat.counts) +
   geom_bar(aes(x=factor(module), y=nMets, fill=Sub_Class), stat="identity", position="stack") +
   scale_fill_manual(values=color.code$colorcode) + 
   xlab("Metabolite module") + ylab("Number of metabolites") +
-  labs(fill="")
-ggsave(f1d, filename="figures/Fig1D.png",width=6,height=4)
+  labs(fill="") +
+  theme(panel.grid=element_blank())
+ggsave(f1d, filename="figures/Fig1D.png",width=6,height=4,dpi=600)
 
 
 ## Fig 1E. metabolite subclass overrepresentation in metabolite modules
@@ -73,8 +74,9 @@ f1e = ggplot(fisher.res) +
   xlab("Metabolite module") + ylab("Metabolite subclass") +
   scale_x_discrete(labels=1:8) +
   guides(fill="none", color="none") +
-  scale_size(range=c(1,6))
-ggsave(f1e, filename="figures/Fig1E.png",width=5,height=4)
+  scale_size(range=c(1,6)) +
+  theme(axis.ticks.y=element_blank())
+ggsave(f1e, filename="figures/Fig1E.png",width=5,height=4,dpi=600)
 
 
 ## Fig 1F. correlations between metab modules & metadata
@@ -86,10 +88,10 @@ mat.traits = c("Maternal BMI","Maternal age","Parity","GDM","PPWL (1mo)","OGCT r
                "EBF (3mo)","EBF (6mo)")
 diet.traits = unique(grep("^HEI",all.trait.corrs.tbl$trait, value=T))
 all.trait.corrs.tbl = all.trait.corrs.tbl %>% 
-  mutate(type = ifelse(trait %in% mat.traits,"Other factors",
-                       ifelse(trait %in% diet.traits,"Diet","Milk components")))
+  mutate(type = ifelse(trait %in% mat.traits,"Other",
+                       ifelse(trait %in% diet.traits,"Diet (HEI)","Milk components")))
 all.trait.corrs.tbl$type = factor(all.trait.corrs.tbl$type, 
-                                  levels = c("Diet","Other factors","Milk components"))
+                                  levels = c("Diet (HEI)","Other","Milk components"))
 
 # only include factors that have at least one sig assoc
 sig.traits = all.trait.corrs.tbl %>% filter(q<0.05) %>% pull(trait) %>% unique()
@@ -108,18 +110,14 @@ f1f = ggplot(all.trait.corrs.tbl %>% filter(trait %in% sig.traits)) +
   guides(fill = guide_legend(order = 1), # Assign an order to the legends
          size = guide_legend(order = 2), color="none") +
   facet_grid(rows = vars(type), scale="free_y", space="free_y")
-ggsave(f1f, filename="figures/fig1F.png",width=5,height=4)
+ggsave(f1f, filename="figures/fig1F.png",width=5,height=4,dpi=600)
 
-
-## multi-panel plot
+## metabolite subclass legend
 subclass.legend = get_legend(f1d + theme(legend.key.size = unit(0.4, "cm"),
                                          legend.text = element_text(size=rel(0.8))))
-row1 = plot_grid(plotlist=list(f1c, subclass.legend), 
-                 ncol = 2, rel_widths = c(3,2))
-row2 = plot_grid(plotlist=list(f1d + theme(legend.position="none"), f1e, f1f), 
-                 ncol = 3, rel_widths = c(1,2,2))
-plot_grid(plotlist = list(row1, row2),nrow=2, rel_heights=c(4,3))
-ggsave(filename="figures/fig1_multipanel.png",width=10,height=7)
+plot_grid(subclass.legend)
+ggsave(filename="figures/fig1_legend.png",width=4,height=4,dpi=600)
+
 
 
 

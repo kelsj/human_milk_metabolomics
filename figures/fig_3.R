@@ -45,7 +45,8 @@ plot.dat = as_tibble(cbind(tpm.1mo.resid[,"ENSG00000103485"],met.resid.mat[,"QUI
 ggplot(plot.dat, aes(x=V1, y=V2)) +
   geom_smooth(method="lm",se=T,color="black",alpha=0.2,linetype="dotted",linewidth=0.5) +
   geom_point(color="#4477AA",size=1) +
-  xlab("QPRT expression") + ylab("Quinolinate")
+  xlab("QPRT expression") + ylab("Quinolinate") +
+  theme(panel.grid=element_blank())
 ggsave("figures/Fig3B.png",width=2.5,height=2.5,dpi=600)
 
 ## 3C: LALBA (ENSG00000167531) expression vs palmitoleic acid in milk
@@ -53,7 +54,8 @@ plot.dat = as_tibble(cbind(tpm.1mo.resid[,"ENSG00000167531"],met.resid.mat[,"PAL
 ggplot(plot.dat, aes(x=V1, y=V2)) +
   geom_smooth(method="lm",se=T,color="black",alpha=0.2,linetype="dotted",linewidth=0.5) +
   geom_point(color="#4477AA",size=1) +
-  xlab("LALBA expression") + ylab("Palmitoleic acid")
+  xlab("LALBA expression") + ylab("Palmitoleic acid")+
+  theme(panel.grid=element_blank())
 ggsave("figures/Fig3C.png",width=2.5,height=2.5,dpi=600)
 
 
