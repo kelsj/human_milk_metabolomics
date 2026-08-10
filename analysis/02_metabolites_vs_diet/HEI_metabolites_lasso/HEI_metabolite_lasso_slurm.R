@@ -10,22 +10,22 @@ suppressPackageStartupMessages({
 source("utils/milk_metabolomics_env.R")
 
 # -----------------------------------------------------------------------------
-# Run metabolite ~ diet lasso for a single metabolite.
+# Run HEI ~ metabolites lasso for a single HEI score
 #
 # Usage:
-#   Rscript metabolite_diet_lasso_slurm.R <met_idx> <outdir> <nreps>
+#   Rscript HEI_metabolite_lasso_slurm.R <hei_idx> <outdir> <nreps>
 #
-# If <met_idx> is not provided, the script falls back to SLURM_ARRAY_TASK_ID.
+# If <hei_idx> is not provided, the script falls back to SLURM_ARRAY_TASK_ID.
 # -----------------------------------------------------------------------------
 
 args <- commandArgs(trailingOnly = TRUE)
 
-met_idx <- NA_integer_
-outdir <- "analysis/02_metabolites_vs_diet/output/by_metabolite"
+hei_idx <- NA_integer_
+outdir <- "analysis/02_metabolites_vs_diet/HEI_metabolites_lasso/output/by_HEI"
 nreps <- 10L
 
 if (length(args) >= 1 && nzchar(args[1])) {
-  met_idx <- suppressWarnings(as.integer(args[1]))
+  hei_idx <- suppressWarnings(as.integer(args[1]))
 }
 if (length(args) >= 2 && nzchar(args[2])) {
   outdir <- args[2]
@@ -34,12 +34,12 @@ if (length(args) >= 3 && nzchar(args[3])) {
   nreps <- suppressWarnings(as.integer(args[3]))
 }
 
-if (is.na(met_idx) || met_idx < 1L) {
-  met_idx <- suppressWarnings(as.integer(Sys.getenv("SLURM_ARRAY_TASK_ID", NA_character_)))
+if (is.na(hei_idx) || hei_idx < 1L) {
+  hei_idx <- suppressWarnings(as.integer(Sys.getenv("SLURM_ARRAY_TASK_ID", NA_character_)))
 }
 
-if (is.na(met_idx) || met_idx < 1L) {
-  stop("No metabolite index provided. Use the first command-line argument or SLURM_ARRAY_TASK_ID.")
+if (is.na(hei_idx) || hei_idx < 1L) {
+  stop("No HEI index provided. Use the first command-line argument or SLURM_ARRAY_TASK_ID.")
 }
 if (is.na(nreps) || nreps < 1L) {
   stop("nreps must be a positive integer.")
@@ -50,23 +50,31 @@ dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 # -----------------------------------------------------------------------------
 # Prepare data
 # -----------------------------------------------------------------------------
+
+# get HEI values from metadata
+metadat = readRDS("data/metabolite_wgcna_metadata.rds")
+hei = metadat %>% select(randID, all_of(grep("^HEI",colnames(metadat),value=T))) %>% na.omit()
+
+hei.mat = as.matrix(hei %>% select(-randID))
+rownames(hei.mat) = hei$randID
+
 met.resid <- readRDS("data/milk_metabolomics_covarResiduals.rds")
 met.resid.mat <- as.matrix(met.resid %>% select(-randID))
 rownames(met.resid.mat) <- met.resid$randID
 
-dhq.mat <- readRDS("data/lasso_input_dhq_features.rds")
-
 # Align samples
-met.resid.mat <- met.resid.mat[rownames(dhq.mat), , drop = FALSE]
+keep.samp = intersect(rownames(hei.mat),rownames(met.resid.mat))
+met.resid.mat <- met.resid.mat[keep.samp,]
+hei.mat <- hei.mat[keep.samp,]
 
-if (met_idx > ncol(met.resid.mat)) {
-  stop(sprintf("met_idx=%d exceeds number of metabolites=%d", met_idx, ncol(met.resid.mat)))
+if (hei_idx > ncol(hei.mat)) {
+  stop(sprintf("hei_idx=%d exceeds number of HEIscores=%d", hei_idx, ncol(hei.mat)))
 }
 
-m <- colnames(met.resid.mat)[met_idx]
-message("Running metabolite: ", m, " (index ", met_idx, ")")
+m <- colnames(hei.mat)[hei_idx]
+message("Running HEI score: ", m, " (index ", hei_idx, ")")
 
-y <- met.resid.mat[, m]
+y <- hei.mat[, m]
 
 # -----------------------------------------------------------------------------
 # Run 10 replicates of 10-fold CV lasso
@@ -84,7 +92,7 @@ for (r in seq_len(nreps)) {
   set.seed(r)
 
   cv <- glmnet::cv.glmnet(
-    x = dhq.mat,
+    x = met.resid.mat,
     y = y,
     alpha = 1,
     nfolds = 10,
@@ -102,25 +110,25 @@ for (r in seq_len(nreps)) {
     pred_col <- lambda_to_col(cv)
     pred_oof <- cv$fit.preval[, pred_col]
     r.corr[r] <- summary(lm(y ~ pred_oof))$r.squared
-    r.feat[[r]] <- colnames(dhq.mat)[selected_idx]
+    r.feat[[r]] <- colnames(met.resid.mat)[selected_idx]
   }
 }
 
 # -----------------------------------------------------------------------------
-# Skip metabolites where no stable model exists
+# Skip HEI scores where no stable model exists
 # -----------------------------------------------------------------------------
 if (sum(r.nsigfeat, na.rm = TRUE) == 0L || isTRUE(all.equal(stats::median(r.corr, na.rm = TRUE), 0))) {
   message(m, " no model")
   out <- list(
     metabolite = m,
-    met_idx = met_idx,
+    hei_idx = hei_idx,
     status = "no_model",
     nreps = nreps,
     r.nsigfeat = r.nsigfeat,
     r.corr = r.corr
   )
 
-  safe_name <- paste0(sprintf("%04d_", met_idx), gsub("[^A-Za-z0-9_.-]", "_", m), ".rds")
+  safe_name <- paste0(sprintf("%04d_", hei_idx), gsub("[^A-Za-z0-9_.-]", "_", m), ".rds")
   saveRDS(out, file = file.path(outdir, safe_name))
   quit(save = "no", status = 0)
 }
@@ -135,19 +143,19 @@ if (length(stab.feat) == 0L) {
   message(m, " no stable features after replicate filtering")
   out <- list(
     metabolite = m,
-    met_idx = met_idx,
+    hei_idx = hei_idx,
     status = "no_stable_features",
     nreps = nreps,
     r.nsigfeat = r.nsigfeat,
     r.corr = r.corr
   )
 
-  safe_name <- paste0(sprintf("%04d_", met_idx), gsub("[^A-Za-z0-9_.-]", "_", m), ".rds")
+  safe_name <- paste0(sprintf("%04d_", hei_idx), gsub("[^A-Za-z0-9_.-]", "_", m), ".rds")
   saveRDS(out, file = file.path(outdir, safe_name))
   quit(save = "no", status = 0)
 }
 
-tmp <- data.frame(dhq.mat[, stab.feat, drop = FALSE])
+tmp <- data.frame(met.resid.mat[, stab.feat, drop = FALSE])
 colnames(tmp) <- stab.feat
 all.fit <- lm(y ~ ., data = tmp)
 fitsumm <- summary(all.fit)
@@ -187,7 +195,7 @@ oof.df <- tibble(
 
 out <- list(
   metabolite = m,
-  met_idx = met_idx,
+  hei_idx = hei_idx,
   status = "ok",
   stable_features = stab.feat,
   fit = save.fit,
@@ -195,6 +203,6 @@ out <- list(
   oof = oof.df
 )
 
-safe_name <- paste0(sprintf("%04d_", met_idx), gsub("[^A-Za-z0-9_.-]", "_", m), ".rds")
+safe_name <- paste0(sprintf("%04d_", hei_idx), gsub("[^A-Za-z0-9_.-]", "_", m), ".rds")
 saveRDS(out, file = file.path(outdir, safe_name))
 message("Saved: ", file.path(outdir, safe_name))

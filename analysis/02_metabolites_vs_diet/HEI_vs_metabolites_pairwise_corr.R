@@ -4,7 +4,7 @@ source("utils/milk_metabolomics_env.R")
 
 # get HEI values from metadata
 metadat = readRDS("data/metabolite_wgcna_metadata.rds")
-hei = hei %>% select(randID, all_of(grep("^HEI",colnames(metadat),value=T)))
+hei = metadat %>% select(randID, all_of(grep("^HEI",colnames(metadat),value=T)))
 
 # load covar residualized metabolomics data
 met.resid = readRDS("data/milk_metabolomics_covarResiduals.rds")
