@@ -4,7 +4,7 @@ set -euo pipefail
 PROJECT_DIR="/project2/kelseyj3_1714/kelseyj3/milk_metabolomics/human_milk_metabolomics"
 cd "${PROJECT_DIR}"
 
-R_SCRIPT="${PROJECT_DIR}/analysis/02_metabolites_vs_diet/HEI_metabolites_lasso/metabolite_diet_lasso_slurm.R"
+R_SCRIPT="${PROJECT_DIR}/analysis/02_metabolites_vs_diet/HEI_metabolites_lasso/HEI_metabolite_lasso_slurm.R"
 OUTDIR="${PROJECT_DIR}/analysis/02_metabolites_vs_diet/HEI_metabolites_lasso/output/by_metabolite"
 LOGDIR="${PROJECT_DIR}/analysis/02_metabolites_vs_diet/HEI_metabolites_lasso/logs"
 
