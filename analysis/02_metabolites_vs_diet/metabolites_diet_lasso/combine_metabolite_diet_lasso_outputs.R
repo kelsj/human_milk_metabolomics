@@ -3,7 +3,7 @@ suppressPackageStartupMessages({
   library(tibble)
 })
 
-indir <- "analysis/02_metabolites_vs_diet/output/by_metabolite"
+indir <- "analysis/02_metabolites_vs_diet/metabolites_diet_lasso/output/by_metabolite"
 
 files <- list.files(indir, pattern = "\\.rds$", full.names = TRUE)
 
@@ -23,10 +23,10 @@ oof_list <- oof_list[!vapply(oof_list, is.null, logical(1))]
 met.oof.fit <- bind_rows(oof_list) %>% as_tibble()
 
 saveRDS(met.fit.ss,
-        file = "analysis/02_metabolites_vs_diet/output/metabolite_diet_linRegModelFit.rds")
+        file = "analysis/02_metabolites_vs_diet/metabolites_diet_lasso/output/metabolite_diet_linRegModelFit.rds")
 
 saveRDS(met.ve.ss,
-        file = "analysis/02_metabolites_vs_diet/output/metabolite_diet_stabSelFeat_featureVE.rds")
+        file = "analysis/02_metabolites_vs_diet/metabolites_diet_lasso/output/metabolite_diet_stabSelFeat_featureVE.rds")
 
 saveRDS(met.oof.fit,
-        file = "analysis/02_metabolites_vs_diet/output/metabolite_diet_oof_rsq.rds")
+        file = "analysis/02_metabolites_vs_diet/metabolites_diet_lasso/output/metabolite_diet_oof_rsq.rds")
