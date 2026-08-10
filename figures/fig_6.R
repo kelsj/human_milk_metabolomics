@@ -34,6 +34,7 @@ pct.by.type.top.sort = feat.ve.type %>% group_by(metabolite) %>%
   arrange(type, -oof_rsq)
 feat.ve.type$metabolite = factor(feat.ve.type$metabolite, levels = pct.by.type.top.sort$metabolite)
 
+## plot 6A
 f6a = ggplot(feat.ve.type) +
   geom_bar(aes(x=metabolite,y=type_r2_sc,fill=type),position="stack",stat="identity",width=1) + 
   scale_y_continuous(expand = c(0,0)) +
@@ -88,18 +89,21 @@ dat.2nonenoyl = metab.dat %>%
 f6ca = ggplot(dat.2nonenoyl, aes(x=sfa_22_0_behenic_acid_g_ndsr, y=`2-NONENOYLCARNITINE`)) +
   geom_smooth(color="gray",linetype="dotted",alpha=0.2,method="lm") +
   geom_point(color=mypal[1],size=0.5) +
-  xlab("sfa_22_0_behenic_acid_g_ndsr") + ylab("2-Nonenoylcarnitine")
+  xlab("sfa_22_0_behenic_acid_g_ndsr") + ylab("2-Nonenoylcarnitine") +
+  theme(panel.grid=element_blank())
     
 f6cb = ggplot(dat.2nonenoyl %>% filter(!is.na(cesarean)), aes(x=as.factor(cesarean), y=`2-NONENOYLCARNITINE`)) +
   geom_beeswarm(color=mypal[3],size=0.5,cex=2) +
   geom_boxplot(color=mypal[3],fill=NA,outlier.shape=NA) +
-  xlab("cesarean") + ylab("2-Nonenoylcarnitine")
+  xlab("cesarean") + ylab("2-Nonenoylcarnitine") +
+  theme(panel.grid=element_blank())
 
 f6cc = ggplot(dat.2nonenoyl %>% filter(!is.na(rs10804178)), 
               aes(x=as.factor(rs10804178), y=`2-NONENOYLCARNITINE`)) +
   geom_beeswarm(color=mypal[2],size=0.5,cex=2) +
   geom_boxplot(color=mypal[2],fill=NA,outlier.shape=NA) +
-  xlab("rs10804178") + ylab("2-Nonenoylcarnitine")
+  xlab("rs10804178") + ylab("2-Nonenoylcarnitine") +
+  theme(panel.grid=element_blank())
 
 # contributing foods to behenic acid
 dhq3.db = read_excel("data/dhq3.vers0516.nutdb.xlsx")
@@ -119,3 +123,4 @@ f6cd = ggplot(feat.foods %>% head(n=10)) +
 
 f6c_all = plot_grid(plotlist = list(f6ca,f6cb,f6cc,f6cd), nrow=1, rel_widths = c(1,1,1,1.5))
 ggsave(f6c_all,file="figures/fig6C.png",width=10,height=2.5,dpi=600)
+
